@@ -216,7 +216,7 @@ function loadResults() {
   const s = document.createElement('script');
   s.id = '_jsonp';
   s.src = SCRIPT_URL + '?callback=__cb&nocache=' + Date.now();
-  s.onerror = () => renderResults({q1:[2,5,7,3],q2:[8,6,2,1],q3:[3,7,4,3],q4:[4,6,4,3],q5:[8,5,4]});
+  s.onerror = () => renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
   document.head.appendChild(s);
 }
 

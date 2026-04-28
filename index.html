@@ -158,7 +158,7 @@
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6jPN68eVpODoeDX-JnSUPVJd2svmhyX3Whl0lKCYuQ_POtM_fC8Ba8geCpfqCnFOd6g/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtxBY-lPUDCCrfbLnkDZQAZre0e41gLlgNEU4BzBOs-nC_MIlCLTrVKjQyR59U6g3p_A/exec';
 
 const QS = [
   { text:'Koliko sati dnevno provodiš na društvenim mrežama?', answers:['Manje od 1 sat','1–2 sata','2–4 sata','Više od 4 sata'] },
@@ -193,13 +193,10 @@ function doSubmit() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Slanje...';
 
-  // Sačuvaj lokalne odgovore da možemo odmah prikazati grafikon
-  const localVote = {q1:ans.q1, q2:ans.q2, q3:ans.q3, q4:ans.q4, q5:ans.q5};
-
   fetch(SCRIPT_URL, {
     method:'POST', mode:'no-cors',
     headers:{'Content-Type':'text/plain'},
-    body: JSON.stringify(localVote)
+    body: JSON.stringify({q1:ans.q1,q2:ans.q2,q3:ans.q3,q4:ans.q4,q5:ans.q5})
   }).finally(() => {
     document.getElementById('surveyArea').innerHTML = `
       <div class="success-box">
@@ -207,9 +204,8 @@ function doSubmit() {
         <h2>Hvala na učešću!</h2>
         <p>Tvoji odgovori su zabilježeni. Pogledaj rezultate ispod.</p>
       </div>`;
-
-    // Odmah prikaži rezultate sa glasom korisnika uračunatim lokalno
-    loadResultsWithOptimisticVote(localVote);
+    // Učitaj iz Sheeta nakon 2s (dovoljno da Sheet primi podatke)
+    setTimeout(loadResults, 2000);
   });
 }
 
@@ -285,36 +281,6 @@ function renderResults(data) {
   });
 }
 
-// Odmah prikaži rezultate sa lokalnim glasom uračunatim, pa osvježi iz Sheeta
-function loadResultsWithOptimisticVote(vote) {
-  const old = document.getElementById('_jsonp');
-  if (old) old.remove();
-
-  const timeout = setTimeout(() => {
-    const d = {q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]};
-    d.q1[vote.q1]++; d.q2[vote.q2]++; d.q3[vote.q3]++; d.q4[vote.q4]++; d.q5[vote.q5]++;
-    renderResults(d);
-  }, 3000);
-
-  window.__cb = function(data) {
-    clearTimeout(timeout);
-    data.q1[vote.q1]++; data.q2[vote.q2]++; data.q3[vote.q3]++;
-    data.q4[vote.q4]++; data.q5[vote.q5]++;
-    renderResults(data);
-    setTimeout(loadResults, 4000);
-  };
-
-  const s = document.createElement('script');
-  s.id = '_jsonp';
-  s.src = SCRIPT_URL + '?callback=__cb&nocache=' + Date.now();
-  s.onerror = () => {
-    clearTimeout(timeout);
-    const d = {q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]};
-    d.q1[vote.q1]++; d.q2[vote.q2]++; d.q3[vote.q3]++; d.q4[vote.q4]++; d.q5[vote.q5]++;
-    renderResults(d);
-  };
-  document.head.appendChild(s);
-}
 
 setInterval(loadResults, 30000);
 loadResults();

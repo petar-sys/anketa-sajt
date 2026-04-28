@@ -7,299 +7,61 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --accent: #6c8cff;
-    --accent2: #a78bfa;
-    --green: #34d399;
-    --text: #e8eaf6;
-    --muted: #8890b0;
-    --border: rgba(108,140,255,0.15);
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a;
+    --accent: #6c8cff; --accent2: #a78bfa; --green: #34d399;
+    --text: #e8eaf6; --muted: #8890b0; --border: rgba(108,140,255,0.15);
   }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  .container {
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  header {
-    text-align: center;
-    padding: 48px 0 40px;
-  }
-
-  header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    background: linear-gradient(135deg, #6c8cff, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 10px;
-  }
-
-  header p {
-    color: var(--muted);
-    font-size: 0.9rem;
-    font-weight: 400;
-  }
-
-  /* PROGRESS */
-  .progress-bar {
-    background: var(--surface2);
-    border-radius: 99px;
-    height: 4px;
-    margin-bottom: 36px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    transition: width 0.4s ease;
-  }
-  .progress-label {
-    text-align: right;
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  /* QUESTION CARD */
-  .question-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 20px;
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding: 20px; }
+  .container { max-width: 760px; margin: 0 auto; }
+  header { text-align: center; padding: 48px 0 40px; }
+  header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem,4vw,2.4rem); background: linear-gradient(135deg,#6c8cff,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+  header p { color: var(--muted); font-size: 0.9rem; }
+  .progress-bar { background: var(--surface2); border-radius: 99px; height: 4px; margin-bottom: 36px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 99px; transition: width 0.4s ease; }
+  .progress-label { text-align: right; font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; }
+  .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 20px; display: none; animation: fadeIn 0.3s ease; }
   .question-card.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .question-num {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .question-text {
-    font-size: 1.15rem;
-    font-weight: 500;
-    line-height: 1.5;
-    margin-bottom: 24px;
-  }
-
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .question-num { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+  .question-text { font-size: 1.15rem; font-weight: 500; line-height: 1.5; margin-bottom: 24px; }
   .options { display: flex; flex-direction: column; gap: 10px; }
-
-  .option {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    border: 1.5px solid var(--border);
-    background: var(--surface2);
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    font-size: 0.95rem;
-  }
+  .option { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 0.95rem; }
   .option:hover { border-color: var(--accent); background: rgba(108,140,255,0.08); }
   .option.selected { border-color: var(--accent); background: rgba(108,140,255,0.15); }
-
-  .option-dot {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--muted);
-    flex-shrink: 0;
-    transition: border-color 0.2s, background 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .option.selected .option-dot {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-  .option.selected .option-dot::after {
-    content: '';
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: white;
-  }
-
-  /* NAVIGATION */
-  .nav-row {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-  }
-
-  .btn {
-    padding: 12px 28px;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: opacity 0.2s, transform 0.1s;
-  }
-  .btn:active { transform: scale(0.97); }
-
-  .btn-outline {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--muted);
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white;
-  }
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .btn-submit {
-    background: linear-gradient(135deg, #34d399, #059669);
-    color: white;
-    width: 100%;
-    padding: 16px;
-    font-size: 1rem;
-    border-radius: 12px;
-    margin-top: 8px;
-    display: none;
-  }
-
-  /* SUCCESS */
-  .success-msg {
-    text-align: center;
-    padding: 40px 20px;
-    display: none;
-    animation: fadeIn 0.4s ease;
-  }
-  .success-msg .icon { font-size: 3rem; margin-bottom: 16px; }
-  .success-msg h2 { font-size: 1.4rem; margin-bottom: 8px; color: var(--green); }
-  .success-msg p { color: var(--muted); font-size: 0.95rem; }
-
-  /* STATUS */
-  .status-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    margin-right: 6px;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* RESULTS */
-  .results-section {
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid var(--border);
-  }
-
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .results-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-  }
-
-  .btn-refresh {
-    padding: 8px 18px;
-    font-size: 0.82rem;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  .btn-refresh:hover { color: var(--accent); border-color: var(--accent); }
-
-  .total-count {
-    font-size: 0.82rem;
-    color: var(--muted);
-    text-align: right;
-    margin-bottom: 20px;
-  }
-  .total-count span { color: var(--accent); font-weight: 600; }
-
-  .chart-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  @media (max-width: 580px) { .chart-grid { grid-template-columns: 1fr; } }
-
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-  }
-  .chart-card.full { grid-column: 1 / -1; }
-
-  .chart-card h3 {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 4px;
-  }
-  .chart-card .chart-question {
-    font-size: 0.88rem;
-    color: var(--text);
-    margin-bottom: 16px;
-    line-height: 1.4;
-  }
-
-  .loading-results {
-    text-align: center;
-    color: var(--muted);
-    padding: 40px;
-    font-size: 0.9rem;
-  }
-
-  footer {
-    text-align: center;
-    padding: 40px 0 20px;
-    color: var(--muted);
-    font-size: 0.78rem;
-  }
+  .option-dot { width:18px; height:18px; border-radius:50%; border:2px solid var(--muted); flex-shrink:0; transition:border-color 0.2s,background 0.2s; display:flex; align-items:center; justify-content:center; }
+  .option.selected .option-dot { border-color:var(--accent); background:var(--accent); }
+  .option.selected .option-dot::after { content:''; width:7px; height:7px; border-radius:50%; background:white; }
+  .nav-row { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
+  .btn { padding:12px 28px; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; border:none; transition:opacity 0.2s,transform 0.1s; }
+  .btn:active { transform:scale(0.97); }
+  .btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--muted); }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
+  .btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-submit { background:linear-gradient(135deg,#34d399,#059669); color:white; width:100%; padding:16px; font-size:1rem; border-radius:12px; margin-top:8px; display:none; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; border:none; }
+  .success-box { text-align:center; padding:48px 20px; background:var(--surface); border:1px solid var(--border); border-radius:16px; }
+  .success-box .icon { font-size:3rem; margin-bottom:16px; }
+  .success-box h2 { font-size:1.4rem; margin-bottom:8px; color:var(--green); }
+  .success-box p { color:var(--muted); font-size:0.95rem; }
+  .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); margin-right:6px; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .results-section { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+  .results-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
+  .results-header h2 { font-family:'DM Serif Display',serif; font-size:1.4rem; }
+  .btn-refresh { padding:8px 18px; font-size:0.82rem; background:var(--surface2); border:1px solid var(--border); color:var(--muted); border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color 0.2s,border-color 0.2s; }
+  .btn-refresh:hover { color:var(--accent); border-color:var(--accent); }
+  .total-count { font-size:0.82rem; color:var(--muted); text-align:right; margin-bottom:20px; }
+  .total-count span { color:var(--accent); font-weight:600; }
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media(max-width:580px){.chart-grid{grid-template-columns:1fr}}
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px; }
+  .chart-card.full { grid-column:1 / -1; }
+  .chart-card h3 { font-size:0.82rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .chart-card .cq { font-size:0.88rem; color:var(--text); margin-bottom:16px; line-height:1.4; }
+  .loading-results { text-align:center; color:var(--muted); padding:40px; font-size:0.9rem; }
+  footer { text-align:center; padding:40px 0 20px; color:var(--muted); font-size:0.78rem; }
 </style>
 </head>
 <body>
@@ -309,98 +71,80 @@
     <p><span class="status-dot"></span>Anonimna anketa · Rezultati u realnom vremenu</p>
   </header>
 
-  <!-- SURVEY FORM -->
-  <div id="survey">
+  <div id="surveyArea">
     <div class="progress-label" id="progressLabel">Pitanje 1 od 5</div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
 
-    <!-- Q1 -->
     <div class="question-card active" id="q1card">
       <div class="question-num">Pitanje 1 od 5</div>
       <div class="question-text">Koliko sati dnevno provodiš na društvenim mrežama?</div>
       <div class="options" id="q1opts">
-        <div class="option" onclick="select(1,0)"><div class="option-dot"></div>Manje od 1 sat</div>
-        <div class="option" onclick="select(1,1)"><div class="option-dot"></div>1–2 sata</div>
-        <div class="option" onclick="select(1,2)"><div class="option-dot"></div>2–4 sata</div>
-        <div class="option" onclick="select(1,3)"><div class="option-dot"></div>Više od 4 sata</div>
+        <div class="option" onclick="sel(1,0)"><div class="option-dot"></div>Manje od 1 sat</div>
+        <div class="option" onclick="sel(1,1)"><div class="option-dot"></div>1–2 sata</div>
+        <div class="option" onclick="sel(1,2)"><div class="option-dot"></div>2–4 sata</div>
+        <div class="option" onclick="sel(1,3)"><div class="option-dot"></div>Više od 4 sata</div>
       </div>
-      <div class="nav-row">
-        <button class="btn btn-primary" onclick="next(1)" id="next1" disabled>Sljedeće →</button>
-      </div>
+      <div class="nav-row"><button class="btn btn-primary" onclick="nxt(1)" id="next1" disabled>Sljedeće →</button></div>
     </div>
 
-    <!-- Q2 -->
     <div class="question-card" id="q2card">
       <div class="question-num">Pitanje 2 od 5</div>
       <div class="question-text">Da li ti društvene mreže pomažu da ostaneš u kontaktu s prijateljima?</div>
       <div class="options" id="q2opts">
-        <div class="option" onclick="select(2,0)"><div class="option-dot"></div>Da, veoma</div>
-        <div class="option" onclick="select(2,1)"><div class="option-dot"></div>Djelimično</div>
-        <div class="option" onclick="select(2,2)"><div class="option-dot"></div>Ne baš</div>
-        <div class="option" onclick="select(2,3)"><div class="option-dot"></div>Ne, radije komuniciram lično</div>
+        <div class="option" onclick="sel(2,0)"><div class="option-dot"></div>Da, veoma</div>
+        <div class="option" onclick="sel(2,1)"><div class="option-dot"></div>Djelimično</div>
+        <div class="option" onclick="sel(2,2)"><div class="option-dot"></div>Ne baš</div>
+        <div class="option" onclick="sel(2,3)"><div class="option-dot"></div>Ne, radije komuniciram lično</div>
       </div>
       <div class="nav-row">
-        <button class="btn btn-outline" onclick="prev(2)">← Nazad</button>
-        <button class="btn btn-primary" onclick="next(2)" id="next2" disabled>Sljedeće →</button>
+        <button class="btn btn-outline" onclick="prv(2)">← Nazad</button>
+        <button class="btn btn-primary" onclick="nxt(2)" id="next2" disabled>Sljedeće →</button>
       </div>
     </div>
 
-    <!-- Q3 -->
     <div class="question-card" id="q3card">
       <div class="question-num">Pitanje 3 od 5</div>
       <div class="question-text">Osjećaš li ponekad FOMO (strah da propuštaš nešto) kad nisi online?</div>
       <div class="options" id="q3opts">
-        <div class="option" onclick="select(3,0)"><div class="option-dot"></div>Često</div>
-        <div class="option" onclick="select(3,1)"><div class="option-dot"></div>Ponekad</div>
-        <div class="option" onclick="select(3,2)"><div class="option-dot"></div>Rijetko</div>
-        <div class="option" onclick="select(3,3)"><div class="option-dot"></div>Nikad</div>
+        <div class="option" onclick="sel(3,0)"><div class="option-dot"></div>Često</div>
+        <div class="option" onclick="sel(3,1)"><div class="option-dot"></div>Ponekad</div>
+        <div class="option" onclick="sel(3,2)"><div class="option-dot"></div>Rijetko</div>
+        <div class="option" onclick="sel(3,3)"><div class="option-dot"></div>Nikad</div>
       </div>
       <div class="nav-row">
-        <button class="btn btn-outline" onclick="prev(3)">← Nazad</button>
-        <button class="btn btn-primary" onclick="next(3)" id="next3" disabled>Sljedeće →</button>
+        <button class="btn btn-outline" onclick="prv(3)">← Nazad</button>
+        <button class="btn btn-primary" onclick="nxt(3)" id="next3" disabled>Sljedeće →</button>
       </div>
     </div>
 
-    <!-- Q4 -->
     <div class="question-card" id="q4card">
       <div class="question-num">Pitanje 4 od 5</div>
       <div class="question-text">Kako ocjenjuješ uticaj društvenih mreža na tvoje mentalno zdravlje?</div>
       <div class="options" id="q4opts">
-        <div class="option" onclick="select(4,0)"><div class="option-dot"></div>Pozitivno</div>
-        <div class="option" onclick="select(4,1)"><div class="option-dot"></div>Više pozitivno nego negativno</div>
-        <div class="option" onclick="select(4,2)"><div class="option-dot"></div>Više negativno nego pozitivno</div>
-        <div class="option" onclick="select(4,3)"><div class="option-dot"></div>Negativno</div>
+        <div class="option" onclick="sel(4,0)"><div class="option-dot"></div>Pozitivno</div>
+        <div class="option" onclick="sel(4,1)"><div class="option-dot"></div>Više pozitivno nego negativno</div>
+        <div class="option" onclick="sel(4,2)"><div class="option-dot"></div>Više negativno nego pozitivno</div>
+        <div class="option" onclick="sel(4,3)"><div class="option-dot"></div>Negativno</div>
       </div>
       <div class="nav-row">
-        <button class="btn btn-outline" onclick="prev(4)">← Nazad</button>
-        <button class="btn btn-primary" onclick="next(4)" id="next4" disabled>Sljedeće →</button>
+        <button class="btn btn-outline" onclick="prv(4)">← Nazad</button>
+        <button class="btn btn-primary" onclick="nxt(4)" id="next4" disabled>Sljedeće →</button>
       </div>
     </div>
 
-    <!-- Q5 -->
     <div class="question-card" id="q5card">
       <div class="question-num">Pitanje 5 od 5</div>
       <div class="question-text">Da li bi ti bilo teško prestati koristiti društvene mreže?</div>
       <div class="options" id="q5opts">
-        <div class="option" onclick="select(5,0)"><div class="option-dot"></div>Da, jako bi mi bilo teško</div>
-        <div class="option" onclick="select(5,1)"><div class="option-dot"></div>Malo bi mi nedostajale</div>
-        <div class="option" onclick="select(5,2)"><div class="option-dot"></div>Ne bi mi bilo problem</div>
+        <div class="option" onclick="sel(5,0)"><div class="option-dot"></div>Da, jako bi mi bilo teško</div>
+        <div class="option" onclick="sel(5,1)"><div class="option-dot"></div>Malo bi mi nedostajale</div>
+        <div class="option" onclick="sel(5,2)"><div class="option-dot"></div>Ne bi mi bilo problem</div>
       </div>
-      <div class="nav-row">
-        <button class="btn btn-outline" onclick="prev(5)">← Nazad</button>
-      </div>
-      <button class="btn btn-submit" id="submitBtn" onclick="submitForm()">✓ Pošalji odgovore</button>
-    </div>
-
-    <!-- SUCCESS -->
-    <div class="success-msg" id="successMsg">
-      <div class="icon">✅</div>
-      <h2>Hvala na učešću!</h2>
-      <p>Tvoji odgovori su zabilježeni. Pogledaj rezultate ispod.</p>
+      <div class="nav-row"><button class="btn btn-outline" onclick="prv(5)">← Nazad</button></div>
+      <button class="btn btn-submit" id="submitBtn" onclick="doSubmit()">✓ Pošalji odgovore</button>
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="results-section">
     <div class="results-header">
       <h2>Rezultati u realnom vremenu</h2>
@@ -414,151 +158,108 @@
 </div>
 
 <script>
-// ========== CONFIG ==========
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6jPN68eVpODoeDX-JnSUPVJd2svmhyX3Whl0lKCYuQ_POtM_fC8Ba8geCpfqCnFOd6g/exec';
 
-const QUESTIONS = [
-  { text: 'Koliko sati dnevno provodiš na društvenim mrežama?', answers: ['Manje od 1 sat','1–2 sata','2–4 sata','Više od 4 sata'] },
-  { text: 'Da li ti društvene mreže pomažu da ostaneš u kontaktu s prijateljima?', answers: ['Da, veoma','Djelimično','Ne baš','Ne, radije komuniciram lično'] },
-  { text: 'Osjećaš li FOMO kad nisi online?', answers: ['Često','Ponekad','Rijetko','Nikad'] },
-  { text: 'Kako ocjenjuješ uticaj na mentalno zdravlje?', answers: ['Pozitivno','Više pozitivno','Više negativno','Negativno'] },
-  { text: 'Da li bi ti bilo teško prestati koristiti društvene mreže?', answers: ['Da, jako teško','Malo bi nedostajale','Ne bi bio problem'] },
+const QS = [
+  { text:'Koliko sati dnevno provodiš na društvenim mrežama?', answers:['Manje od 1 sat','1–2 sata','2–4 sata','Više od 4 sata'] },
+  { text:'Da li ti društvene mreže pomažu da ostaneš u kontaktu s prijateljima?', answers:['Da, veoma','Djelimično','Ne baš','Ne, radije komuniciram lično'] },
+  { text:'Osjećaš li FOMO kad nisi online?', answers:['Često','Ponekad','Rijetko','Nikad'] },
+  { text:'Kako ocjenjuješ uticaj na mentalno zdravlje?', answers:['Pozitivno','Više pozitivno','Više negativno','Negativno'] },
+  { text:'Da li bi ti bilo teško prestati koristiti društvene mreže?', answers:['Da, jako teško','Malo bi nedostajale','Ne bi bio problem'] },
 ];
+const CLR = ['#6c8cff','#a78bfa','#34d399','#f59e0b','#f87171'];
 
-const COLOURS = ['#6c8cff','#a78bfa','#34d399','#f59e0b','#f87171'];
-
-let answers = { q1: null, q2: null, q3: null, q4: null, q5: null };
+let ans = {q1:null,q2:null,q3:null,q4:null,q5:null};
 let charts = [];
-let currentQ = 1;
 
-// ========== SURVEY LOGIC ==========
-function select(q, idx) {
-  answers['q' + q] = idx;
-  document.querySelectorAll('#q' + q + 'opts .option').forEach((el, i) => {
-    el.classList.toggle('selected', i === idx);
-  });
-  const nextBtn = document.getElementById('next' + q);
-  if (nextBtn) nextBtn.disabled = false;
-  if (q === 5) document.getElementById('submitBtn').style.display = 'block';
+function sel(q, i) {
+  ans['q'+q] = i;
+  document.querySelectorAll('#q'+q+'opts .option').forEach((el,j) => el.classList.toggle('selected', j===i));
+  const nb = document.getElementById('next'+q);
+  if (nb) nb.disabled = false;
+  if (q===5) document.getElementById('submitBtn').style.display = 'block';
 }
-
 function showQ(n) {
   document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
-  document.getElementById('q' + n + 'card').classList.add('active');
-  currentQ = n;
-  const pct = (n / 5) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = 'Pitanje ' + n + ' od 5';
+  document.getElementById('q'+n+'card').classList.add('active');
+  document.getElementById('progressFill').style.width = (n/5*100)+'%';
+  document.getElementById('progressLabel').textContent = 'Pitanje '+n+' od 5';
 }
+function nxt(q) { if (ans['q'+q]!==null) showQ(q+1); }
+function prv(q) { showQ(q-1); }
 
-function next(q) {
-  if (answers['q' + q] === null) return;
-  showQ(q + 1);
-}
+function doSubmit() {
+  for (let i=1;i<=5;i++) { if (ans['q'+i]===null) { alert('Molim te odgovori na sva pitanja.'); showQ(i); return; } }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Slanje...';
 
-function prev(q) { showQ(q - 1); }
-
-function submitForm() {
-  for (let i = 1; i <= 5; i++) {
-    if (answers['q' + i] === null) { alert('Molim te odgovori na sva pitanja.'); showQ(i); return; }
-  }
-  document.getElementById('submitBtn').disabled = true;
-  document.getElementById('submitBtn').textContent = 'Slanje...';
-
-  const payload = {
-    q1: answers.q1, q2: answers.q2,
-    q3: answers.q3, q4: answers.q4, q5: answers.q5
-  };
-
-  // Use no-cors to avoid CORS issues with Apps Script
   fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).then(() => {
-    document.getElementById('survey').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
-    setTimeout(loadResults, 2000);
-  }).catch(() => {
-    document.getElementById('survey').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
+    method:'POST', mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body: JSON.stringify({q1:ans.q1,q2:ans.q2,q3:ans.q3,q4:ans.q4,q5:ans.q5})
+  }).finally(() => {
+    document.getElementById('surveyArea').innerHTML = `
+      <div class="success-box">
+        <div class="icon">✅</div>
+        <h2>Hvala na učešću!</h2>
+        <p>Tvoji odgovori su zabilježeni. Pogledaj rezultate ispod.</p>
+      </div>`;
     setTimeout(loadResults, 2000);
   });
 }
 
-// ========== RESULTS ==========
+// JSONP – jedini način da zaobiđemo CORS na Google Apps Script GET
 function loadResults() {
-  fetch(SCRIPT_URL + '?action=get&t=' + Date.now())
-    .then(r => r.json())
-    .then(data => renderResults(data))
-    .catch(() => {
-      // Fallback: show demo data if CORS blocks GET
-      renderResults({ q1:[3,5,8,4], q2:[10,6,3,1], q3:[4,8,5,3], q4:[5,7,5,3], q5:[9,6,5] });
-    });
+  const old = document.getElementById('_jsonp');
+  if (old) old.remove();
+  window.__cb = function(data) { renderResults(data); };
+  const s = document.createElement('script');
+  s.id = '_jsonp';
+  s.src = SCRIPT_URL + '?callback=__cb&nocache=' + Date.now();
+  s.onerror = () => renderResults({q1:[2,5,7,3],q2:[8,6,2,1],q3:[3,7,4,3],q4:[4,6,4,3],q5:[8,5,4]});
+  document.head.appendChild(s);
 }
 
 function renderResults(data) {
-  const totals = data.q1.reduce((a, b) => a + b, 0);
-  document.getElementById('totalCount').innerHTML = 'Ukupno glasova: <span>' + totals + '</span>';
-
-  // Destroy old charts
-  charts.forEach(c => c.destroy());
-  charts = [];
+  const total = (data.q1||[]).reduce((a,b)=>a+b,0);
+  document.getElementById('totalCount').innerHTML = 'Ukupno glasova: <span>'+total+'</span>';
+  charts.forEach(c=>c.destroy()); charts=[];
 
   const container = document.getElementById('resultsContainer');
-  container.innerHTML = '';
-
+  container.innerHTML='';
   const grid = document.createElement('div');
-  grid.className = 'chart-grid';
+  grid.className='chart-grid';
   container.appendChild(grid);
 
-  QUESTIONS.forEach((q, qi) => {
-    const key = 'q' + (qi + 1);
-    const vals = data[key] || [];
+  QS.forEach((q,qi) => {
+    const vals = data['q'+(qi+1)] || Array(q.answers.length).fill(0);
+    const tot = vals.reduce((a,b)=>a+b,0)||1;
     const card = document.createElement('div');
-    card.className = 'chart-card' + (qi === 4 ? ' full' : '');
-    card.innerHTML = `
-      <h3>Pitanje ${qi + 1}</h3>
-      <div class="chart-question">${q.text}</div>
-      <canvas id="chart${qi}" height="180"></canvas>
-    `;
+    card.className='chart-card'+(qi===4?' full':'');
+    card.innerHTML=`<h3>Pitanje ${qi+1}</h3><div class="cq">${q.text}</div><canvas id="ch${qi}" height="180"></canvas>`;
     grid.appendChild(card);
 
-    const ctx = card.querySelector('canvas').getContext('2d');
-    const total = vals.reduce((a, b) => a + b, 0) || 1;
-    const pcts = vals.map(v => Math.round(v / total * 100));
-
-    const ch = new Chart(ctx, {
-      type: qi < 2 ? 'doughnut' : 'bar',
-      data: {
-        labels: q.answers,
-        datasets: [{
-          data: vals,
-          backgroundColor: qi < 2
-            ? COLOURS.slice(0, q.answers.length)
-            : COLOURS.slice(0, q.answers.length).map(c => c + 'cc'),
-          borderColor: qi < 2 ? 'transparent' : COLOURS.slice(0, q.answers.length),
-          borderWidth: qi < 2 ? 0 : 1.5,
-          borderRadius: 6,
+    const isDn = qi<2;
+    const ch = new Chart(card.querySelector('canvas').getContext('2d'), {
+      type: isDn?'doughnut':'bar',
+      data:{
+        labels:q.answers,
+        datasets:[{
+          data:vals,
+          backgroundColor: isDn ? CLR.slice(0,q.answers.length) : CLR.slice(0,q.answers.length).map(c=>c+'cc'),
+          borderColor: isDn ? 'transparent' : CLR.slice(0,q.answers.length),
+          borderWidth: isDn?0:1.5, borderRadius:6
         }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: qi < 2,
-            labels: { color: '#8890b0', font: { size: 11, family: 'DM Sans' }, padding: 12 }
-          },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ${ctx.parsed} glasova (${pcts[ctx.dataIndex]}%)`
-            }
-          }
+      options:{
+        responsive:true,
+        plugins:{
+          legend:{display:isDn, labels:{color:'#8890b0',font:{size:11,family:'DM Sans'},padding:12}},
+          tooltip:{callbacks:{label:ctx=>` ${ctx.raw} glasova (${Math.round(ctx.raw/tot*100)}%)`}}
         },
-        scales: qi < 2 ? {} : {
-          x: { ticks: { color: '#8890b0', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-          y: { ticks: { color: '#8890b0', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.06)' }, beginAtZero: true }
+        scales: isDn ? {} : {
+          x:{ticks:{color:'#8890b0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+          y:{ticks:{color:'#8890b0',stepSize:1},grid:{color:'rgba(255,255,255,0.06)'},beginAtZero:true}
         }
       }
     });
@@ -566,7 +267,6 @@ function renderResults(data) {
   });
 }
 
-// Auto-refresh every 30s
 setInterval(loadResults, 30000);
 loadResults();
 </script>

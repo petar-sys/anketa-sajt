@@ -1,180 +1,226 @@
-<!-- KOPIRAJ SVE OD OVDJE DO KRAJA I NALIJEPI U CUSTOM HTML BLOK U WORDPRESSU -->
-
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anketa – Onlajn komunikacija i društvo</title>
 <style>
-.anketa-wrap{max-width:700px;margin:0 auto;font-family:sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f3f4f6;color:#111;padding:2rem 1rem}
+h1{font-size:22px;font-weight:700;color:#1e3a5f;margin-bottom:0.25rem;text-align:center}
+.subtitle{font-size:14px;color:#6b7280;text-align:center;margin-bottom:2rem}
+.wrap{max-width:680px;margin:0 auto}
 .q-block{border:1px solid #e5e7eb;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#fff}
-.q-title{font-size:15px;font-weight:600;color:#111;margin-bottom:0.75rem}
 .q-num{font-size:11px;color:#9ca3af;margin-bottom:0.25rem}
+.q-title{font-size:15px;font-weight:600;color:#111;margin-bottom:0.75rem}
 .opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;border:1px solid #e5e7eb;margin-bottom:6px;transition:background 0.15s}
 .opt:hover{background:#f3f4f6}
 .opt.selected{border-color:#378ADD;background:#EFF6FF}
 .opt input{accent-color:#378ADD;width:16px;height:16px;flex-shrink:0}
 .opt label{font-size:14px;color:#111;cursor:pointer;flex:1}
 .opt.selected label{color:#1e40af}
-.anketa-submit{width:100%;padding:12px;background:#378ADD;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:0.5rem}
-.anketa-submit:hover{background:#185FA5}
-.anketa-submit:disabled{background:#bfdbfe;cursor:not-allowed}
-.anketa-thanks{background:#eff6ff;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid #378ADD}
-.anketa-thanks p{font-size:14px;color:#1e40af;margin:0}
-.results-section{margin-top:2rem}
+.submit-btn{width:100%;padding:12px;background:#378ADD;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:0.5rem}
+.submit-btn:hover{background:#185FA5}
+.submit-btn:disabled{background:#bfdbfe;cursor:not-allowed}
+.thanks{background:#eff6ff;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1rem;border-left:4px solid #378ADD}
+.thanks p{font-size:14px;color:#1e40af;margin:0}
+.results-section{background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-top:2rem}
 .r-title{font-size:16px;font-weight:600;color:#111;margin-bottom:1rem}
 .chart-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
 .atab{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #d1d5db;cursor:pointer;color:#6b7280;background:#fff}
 .atab.active{background:#378ADD;color:#fff;border-color:#378ADD}
-.chart-wrap{position:relative;width:100%;height:240px;margin-bottom:0.5rem}
+.chart-wrap{position:relative;width:100%;height:260px;margin-bottom:0.5rem}
 .total-note{font-size:12px;color:#9ca3af;text-align:right}
+.loading{text-align:center;color:#9ca3af;font-size:13px;padding:1rem}
+.refresh-btn{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d1d5db;cursor:pointer;color:#6b7280;background:#fff;float:right}
+.refresh-btn:hover{background:#f3f4f6}
 </style>
+</head>
+<body>
+<div class="wrap">
 
-<div class="anketa-wrap">
+<h1>Anketa – Onlajn komunikacija i društvo</h1>
+<p class="subtitle">Anonimna anketa · Rezultati su vidljivi svima u realnom vremenu</p>
 
-<div id="anketa-form">
+<div id="survey-form">
   <div class="q-block">
     <div class="q-num">Pitanje 1 od 5</div>
     <div class="q-title">Koliko sati dnevno provodiš na društvenim mrežama?</div>
-    <div class="opt" onclick="apick(this,1,0)"><input type="radio" name="aq1" id="aq1a"><label for="aq1a">Manje od 1 sat</label></div>
-    <div class="opt" onclick="apick(this,1,1)"><input type="radio" name="aq1" id="aq1b"><label for="aq1b">1–2 sata</label></div>
-    <div class="opt" onclick="apick(this,1,2)"><input type="radio" name="aq1" id="aq1c"><label for="aq1c">2–4 sata</label></div>
-    <div class="opt" onclick="apick(this,1,3)"><input type="radio" name="aq1" id="aq1d"><label for="aq1d">Više od 4 sata</label></div>
+    <div class="opt" onclick="apick(this,0,0)"><input type="radio" name="aq1"><label>Manje od 1 sat</label></div>
+    <div class="opt" onclick="apick(this,0,1)"><input type="radio" name="aq1"><label>1–2 sata</label></div>
+    <div class="opt" onclick="apick(this,0,2)"><input type="radio" name="aq1"><label>2–4 sata</label></div>
+    <div class="opt" onclick="apick(this,0,3)"><input type="radio" name="aq1"><label>Više od 4 sata</label></div>
   </div>
 
   <div class="q-block">
     <div class="q-num">Pitanje 2 od 5</div>
     <div class="q-title">Da li ti društvene mreže pomažu da ostaneš u kontaktu s prijateljima?</div>
-    <div class="opt" onclick="apick(this,2,0)"><input type="radio" name="aq2" id="aq2a"><label for="aq2a">Da, veoma</label></div>
-    <div class="opt" onclick="apick(this,2,1)"><input type="radio" name="aq2" id="aq2b"><label for="aq2b">Djelimično</label></div>
-    <div class="opt" onclick="apick(this,2,2)"><input type="radio" name="aq2" id="aq2c"><label for="aq2c">Ne baš</label></div>
-    <div class="opt" onclick="apick(this,2,3)"><input type="radio" name="aq2" id="aq2d"><label for="aq2d">Ne, radije komuniciram lično</label></div>
+    <div class="opt" onclick="apick(this,1,0)"><input type="radio" name="aq2"><label>Da, veoma</label></div>
+    <div class="opt" onclick="apick(this,1,1)"><input type="radio" name="aq2"><label>Djelimično</label></div>
+    <div class="opt" onclick="apick(this,1,2)"><input type="radio" name="aq2"><label>Ne baš</label></div>
+    <div class="opt" onclick="apick(this,1,3)"><input type="radio" name="aq2"><label>Ne, radije komuniciram lično</label></div>
   </div>
 
   <div class="q-block">
     <div class="q-num">Pitanje 3 od 5</div>
     <div class="q-title">Osjećaš li ponekad FOMO (strah da propuštaš nešto) kad nisi online?</div>
-    <div class="opt" onclick="apick(this,3,0)"><input type="radio" name="aq3" id="aq3a"><label for="aq3a">Često</label></div>
-    <div class="opt" onclick="apick(this,3,1)"><input type="radio" name="aq3" id="aq3b"><label for="aq3b">Ponekad</label></div>
-    <div class="opt" onclick="apick(this,3,2)"><input type="radio" name="aq3" id="aq3c"><label for="aq3c">Rijetko</label></div>
-    <div class="opt" onclick="apick(this,3,3)"><input type="radio" name="aq3" id="aq3d"><label for="aq3d">Nikad</label></div>
+    <div class="opt" onclick="apick(this,2,0)"><input type="radio" name="aq3"><label>Često</label></div>
+    <div class="opt" onclick="apick(this,2,1)"><input type="radio" name="aq3"><label>Ponekad</label></div>
+    <div class="opt" onclick="apick(this,2,2)"><input type="radio" name="aq3"><label>Rijetko</label></div>
+    <div class="opt" onclick="apick(this,2,3)"><input type="radio" name="aq3"><label>Nikad</label></div>
   </div>
 
   <div class="q-block">
     <div class="q-num">Pitanje 4 od 5</div>
     <div class="q-title">Kako ocjenjuješ uticaj društvenih mreža na tvoje mentalno zdravlje?</div>
-    <div class="opt" onclick="apick(this,4,0)"><input type="radio" name="aq4" id="aq4a"><label for="aq4a">Pozitivno</label></div>
-    <div class="opt" onclick="apick(this,4,1)"><input type="radio" name="aq4" id="aq4b"><label for="aq4b">Više pozitivno nego negativno</label></div>
-    <div class="opt" onclick="apick(this,4,2)"><input type="radio" name="aq4" id="aq4c"><label for="aq4c">Više negativno nego pozitivno</label></div>
-    <div class="opt" onclick="apick(this,4,3)"><input type="radio" name="aq4" id="aq4d"><label for="aq4d">Negativno</label></div>
+    <div class="opt" onclick="apick(this,3,0)"><input type="radio" name="aq4"><label>Pozitivno</label></div>
+    <div class="opt" onclick="apick(this,3,1)"><input type="radio" name="aq4"><label>Više pozitivno nego negativno</label></div>
+    <div class="opt" onclick="apick(this,3,2)"><input type="radio" name="aq4"><label>Više negativno nego pozitivno</label></div>
+    <div class="opt" onclick="apick(this,3,3)"><input type="radio" name="aq4"><label>Negativno</label></div>
   </div>
 
   <div class="q-block">
     <div class="q-num">Pitanje 5 od 5</div>
     <div class="q-title">Da li bi ti bilo teško prestati koristiti društvene mreže?</div>
-    <div class="opt" onclick="apick(this,5,0)"><input type="radio" name="aq5" id="aq5a"><label for="aq5a">Da, jako bi mi bilo teško</label></div>
-    <div class="opt" onclick="apick(this,5,1)"><input type="radio" name="aq5" id="aq5b"><label for="aq5b">Malo bi mi nedostajale</label></div>
-    <div class="opt" onclick="apick(this,5,2)"><input type="radio" name="aq5" id="aq5c"><label for="aq5c">Ne bi mi bilo problem</label></div>
+    <div class="opt" onclick="apick(this,4,0)"><input type="radio" name="aq5"><label>Da, jako bi mi bilo teško</label></div>
+    <div class="opt" onclick="apick(this,4,1)"><input type="radio" name="aq5"><label>Malo bi mi nedostajale</label></div>
+    <div class="opt" onclick="apick(this,4,2)"><input type="radio" name="aq5"><label>Ne bi mi bilo problem</label></div>
   </div>
 
-  <button class="anketa-submit" id="asubmitBtn" onclick="asubmitVote()" disabled>Pošalji odgovore</button>
+  <button class="submit-btn" id="submitBtn" onclick="submitVote()" disabled>Pošalji odgovore</button>
 </div>
 
 <div class="results-section">
-  <div class="r-title">Rezultati u realnom vremenu</div>
-  <div class="chart-tabs" id="atabs">
-    <div class="atab active" onclick="ashowQ(0)">Pitanje 1</div>
-    <div class="atab" onclick="ashowQ(1)">Pitanje 2</div>
-    <div class="atab" onclick="ashowQ(2)">Pitanje 3</div>
-    <div class="atab" onclick="ashowQ(3)">Pitanje 4</div>
-    <div class="atab" onclick="ashowQ(4)">Pitanje 5</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <div class="r-title" style="margin-bottom:0">Rezultati u realnom vremenu</div>
+    <button class="refresh-btn" onclick="loadResults()">Osvježi</button>
+  </div>
+  <div class="chart-tabs">
+    <div class="atab active" onclick="showQ(0)">Pitanje 1</div>
+    <div class="atab" onclick="showQ(1)">Pitanje 2</div>
+    <div class="atab" onclick="showQ(2)">Pitanje 3</div>
+    <div class="atab" onclick="showQ(3)">Pitanje 4</div>
+    <div class="atab" onclick="showQ(4)">Pitanje 5</div>
   </div>
   <div class="chart-wrap">
-    <canvas id="aresultsChart"></canvas>
+    <canvas id="resultsChart" role="img" aria-label="Grafikon rezultata ankete">Učitavanje rezultata...</canvas>
   </div>
-  <div class="total-note" id="atotalNote">Ukupno glasova: 0</div>
+  <div class="total-note" id="totalNote">Učitavanje...</div>
 </div>
 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-(function(){
-var aquestions = [
-  {opts:["Manje od 1 sat","1–2 sata","2–4 sata","Više od 4 sata"],votes:[0,0,0,0]},
-  {opts:["Da, veoma","Djelimično","Ne baš","Ne, radije lično"],votes:[0,0,0,0]},
-  {opts:["Često","Ponekad","Rijetko","Nikad"],votes:[0,0,0,0]},
-  {opts:["Pozitivno","Više pozitivno","Više negativno","Negativno"],votes:[0,0,0,0]},
-  {opts:["Da, jako teško","Malo bi nedostajale","Ne bi problem"],votes:[0,0,0]}
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_tXyFv8Eiz-uvluUkhTWDRioI9rr1fyJoOcKfNj_nn_Tj_dogN1kRK16nxh1qGDRJKw/exec";
+
+const questions = [
+  {label:"Sati dnevno na mrežama", opts:["Manje od 1 sat","1–2 sata","2–4 sata","Više od 4 sata"], votes:[0,0,0,0]},
+  {label:"Pomažu u kontaktu", opts:["Da, veoma","Djelimično","Ne baš","Ne, radije lično"], votes:[0,0,0,0]},
+  {label:"FOMO fenomen", opts:["Često","Ponekad","Rijetko","Nikad"], votes:[0,0,0,0]},
+  {label:"Uticaj na mentalno zdravlje", opts:["Pozitivno","Više pozitivno","Više negativno","Negativno"], votes:[0,0,0,0]},
+  {label:"Teško bi prestao", opts:["Da, jako teško","Malo bi nedostajale","Ne bi problem"], votes:[0,0,0]}
 ];
-var acolours=["#378ADD","#1D9E75","#EF9F27","#D4537E","#7F77DD"];
-var aanswers=[null,null,null,null,null];
-var aactiveQ=0;
-var achart=null;
-var asubmitted=false;
 
-window.apick=function(el,qNum,optIdx){
-  var q=qNum-1;
-  el.closest('.q-block').querySelectorAll('.opt').forEach(function(o){o.classList.remove('selected');});
+const colours = ["#378ADD","#1D9E75","#EF9F27","#D4537E","#7F77DD"];
+const answers = [null,null,null,null,null];
+let activeQ = 0;
+let chart = null;
+let submitted = false;
+
+function apick(el, qIdx, optIdx) {
+  el.closest('.q-block').querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
-  el.querySelector('input').checked=true;
-  aanswers[q]=optIdx;
-  var allAnswered=aanswers.every(function(a){return a!==null;});
-  document.getElementById('asubmitBtn').disabled=!allAnswered;
-};
+  el.querySelector('input').checked = true;
+  answers[qIdx] = optIdx;
+  document.getElementById('submitBtn').disabled = answers.some(a => a === null);
+}
 
-window.asubmitVote=function(){
-  if(asubmitted)return;
-  asubmitted=true;
-  aanswers.forEach(function(ans,qi){
-    if(ans!==null)aquestions[qi].votes[ans]++;
+function submitVote() {
+  if (submitted) return;
+  submitted = true;
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = 'Slanje...';
+
+  const payload = {q1:answers[0], q2:answers[1], q3:answers[2], q4:answers[3], q5:answers[4]};
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  }).then(() => {
+    document.getElementById('submitBtn').textContent = 'Glasano!';
+    const thanks = document.createElement('div');
+    thanks.className = 'thanks';
+    thanks.innerHTML = '<p>Hvala na glasanju! Ispod možeš vidjeti kako su drugi odgovorili.</p>';
+    document.getElementById('survey-form').insertBefore(thanks, document.getElementById('submitBtn'));
+    answers.forEach((ans, qi) => { if (ans !== null) questions[qi].votes[ans]++; });
+    renderChart(activeQ);
+    setTimeout(loadResults, 2000);
+  }).catch(() => {
+    answers.forEach((ans, qi) => { if (ans !== null) questions[qi].votes[ans]++; });
+    renderChart(activeQ);
   });
-  document.getElementById('asubmitBtn').disabled=true;
-  document.getElementById('asubmitBtn').textContent='Glasano!';
-  var thanks=document.createElement('div');
-  thanks.className='anketa-thanks';
-  thanks.innerHTML='<p>Hvala na glasanju! Ispod možeš vidjeti kako su drugi odgovorili.</p>';
-  var form=document.getElementById('anketa-form');
-  form.insertBefore(thanks,document.getElementById('asubmitBtn'));
-  arenderChart(aactiveQ);
-};
+}
 
-window.ashowQ=function(idx){
-  aactiveQ=idx;
-  document.querySelectorAll('.atab').forEach(function(t,i){t.classList.toggle('active',i===idx);});
-  arenderChart(idx);
-};
+function showQ(idx) {
+  activeQ = idx;
+  document.querySelectorAll('.atab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  renderChart(idx);
+}
 
-function arenderChart(idx){
-  var q=aquestions[idx];
-  var total=q.votes.reduce(function(a,b){return a+b;},0);
-  document.getElementById('atotalNote').textContent='Ukupno glasova: '+total;
-  var pcts=q.votes.map(function(v){return total>0?Math.round(v/total*100):0;});
-  if(achart)achart.destroy();
-  achart=new Chart(document.getElementById('aresultsChart'),{
-    type:'bar',
-    data:{
-      labels:q.opts,
-      datasets:[{
-        label:'Glasova (%)',
-        data:pcts,
-        backgroundColor:acolours[idx]+'CC',
-        borderColor:acolours[idx],
-        borderWidth:1,
-        borderRadius:4
+function renderChart(idx) {
+  const q = questions[idx];
+  const total = q.votes.reduce((a, b) => a + b, 0);
+  document.getElementById('totalNote').textContent = 'Ukupno glasova: ' + total;
+  const pcts = q.votes.map(v => total > 0 ? Math.round(v / total * 100) : 0);
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('resultsChart'), {
+    type: 'bar',
+    data: {
+      labels: q.opts,
+      datasets: [{
+        label: 'Glasova (%)',
+        data: pcts,
+        backgroundColor: colours[idx] + 'CC',
+        borderColor: colours[idx],
+        borderWidth: 1,
+        borderRadius: 4
       }]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      indexAxis:'y',
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:function(ctx){return ctx.parsed.x+'% ('+q.votes[ctx.dataIndex]+' glasova)';}}}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: {display: false},
+        tooltip: {callbacks: {label: ctx => ctx.parsed.x + '% (' + q.votes[ctx.dataIndex] + ' glasova)'}}
       },
-      scales:{
-        x:{max:100,ticks:{callback:function(v){return v+'%';},font:{size:12}},grid:{color:'rgba(0,0,0,0.06)'}},
-        y:{ticks:{font:{size:12}},grid:{display:false}}
+      scales: {
+        x: {max: 100, ticks: {callback: v => v + '%', font: {size: 12}}, grid: {color: 'rgba(0,0,0,0.06)'}},
+        y: {ticks: {font: {size: 12}}, grid: {display: false}}
       }
     }
   });
 }
 
-arenderChart(0);
-})();
+function loadResults() {
+  fetch(SCRIPT_URL + '?t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      if (data.q1) questions[0].votes = data.q1;
+      if (data.q2) questions[1].votes = data.q2;
+      if (data.q3) questions[2].votes = data.q3;
+      if (data.q4) questions[3].votes = data.q4;
+      if (data.q5) questions[4].votes = data.q5;
+      renderChart(activeQ);
+    })
+    .catch(() => renderChart(activeQ));
+}
+
+loadResults();
+setInterval(loadResults, 30000);
 </script>
+</body>
+</html>

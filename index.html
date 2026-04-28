@@ -193,10 +193,13 @@ function doSubmit() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Slanje...';
 
+  // Sačuvaj lokalne odgovore da možemo odmah prikazati grafikon
+  const localVote = {q1:ans.q1, q2:ans.q2, q3:ans.q3, q4:ans.q4, q5:ans.q5};
+
   fetch(SCRIPT_URL, {
     method:'POST', mode:'no-cors',
     headers:{'Content-Type':'text/plain'},
-    body: JSON.stringify({q1:ans.q1,q2:ans.q2,q3:ans.q3,q4:ans.q4,q5:ans.q5})
+    body: JSON.stringify(localVote)
   }).finally(() => {
     document.getElementById('surveyArea').innerHTML = `
       <div class="success-box">
@@ -204,7 +207,9 @@ function doSubmit() {
         <h2>Hvala na učešću!</h2>
         <p>Tvoji odgovori su zabilježeni. Pogledaj rezultate ispod.</p>
       </div>`;
-    setTimeout(loadResults, 2000);
+
+    // Odmah prikaži rezultate sa glasom korisnika uračunatim lokalno
+    loadResultsWithOptimisticVote(localVote);
   });
 }
 
@@ -213,20 +218,13 @@ function loadResults() {
   const old = document.getElementById('_jsonp');
   if (old) old.remove();
 
-  // Prikaži cached podatke odmah ako postoje
-  const cached = sessionStorage.getItem('anketa_results');
-  if (cached) {
-    try { renderResults(JSON.parse(cached)); } catch(e) {}
-  }
-
-  // Timeout – ako Script ne odgovori za 4s, prikaži 0
+  // Timeout – ako Script ne odgovori za 5s, prikaži 0
   const timeout = setTimeout(() => {
-    if (!cached) renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
-  }, 4000);
+    renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
+  }, 5000);
 
   window.__cb = function(data) {
     clearTimeout(timeout);
-    sessionStorage.setItem('anketa_results', JSON.stringify(data));
     renderResults(data);
   };
 
@@ -235,7 +233,7 @@ function loadResults() {
   s.src = SCRIPT_URL + '?callback=__cb&nocache=' + Date.now();
   s.onerror = () => {
     clearTimeout(timeout);
-    if (!cached) renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
+    renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
   };
   document.head.appendChild(s);
 }
@@ -285,6 +283,37 @@ function renderResults(data) {
     });
     charts.push(ch);
   });
+}
+
+// Odmah prikaži rezultate sa lokalnim glasom uračunatim, pa osvježi iz Sheeta
+function loadResultsWithOptimisticVote(vote) {
+  const old = document.getElementById('_jsonp');
+  if (old) old.remove();
+
+  const timeout = setTimeout(() => {
+    const d = {q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]};
+    d.q1[vote.q1]++; d.q2[vote.q2]++; d.q3[vote.q3]++; d.q4[vote.q4]++; d.q5[vote.q5]++;
+    renderResults(d);
+  }, 3000);
+
+  window.__cb = function(data) {
+    clearTimeout(timeout);
+    data.q1[vote.q1]++; data.q2[vote.q2]++; data.q3[vote.q3]++;
+    data.q4[vote.q4]++; data.q5[vote.q5]++;
+    renderResults(data);
+    setTimeout(loadResults, 4000);
+  };
+
+  const s = document.createElement('script');
+  s.id = '_jsonp';
+  s.src = SCRIPT_URL + '?callback=__cb&nocache=' + Date.now();
+  s.onerror = () => {
+    clearTimeout(timeout);
+    const d = {q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]};
+    d.q1[vote.q1]++; d.q2[vote.q2]++; d.q3[vote.q3]++; d.q4[vote.q4]++; d.q5[vote.q5]++;
+    renderResults(d);
+  };
+  document.head.appendChild(s);
 }
 
 setInterval(loadResults, 30000);

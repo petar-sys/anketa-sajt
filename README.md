@@ -20,3 +20,6 @@ https://petar-sys.github.io/anketa-sajt
 
 ## Autor
 Petar Kolobarić
+
+## Baza podataka (live)
+https://docs.google.com/spreadsheets/d/1usqPsuqjV_ORLUtKG3TDS0nPb0-382jY4dKDfT3X5YQ

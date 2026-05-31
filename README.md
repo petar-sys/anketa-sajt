@@ -1,6 +1,6 @@
 # Onlajn komunikacija i društvo
 
-Školski projekat na temu onlajn komunikacije i njenog uticaja na društvo.
+Projekat na temu onlajn komunikacije i njenog uticaja na društvo.
 
 ## O projektu
 Istraživanje trendova korištenja interneta i društvenih mreža u periodu 2020–2025, sa posebnim fokusom na Bosnu i Hercegovinu.

@@ -158,8 +158,10 @@
 </div>
 
 <script>
+// URL Google Sheets skripte
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtxBY-lPUDCCrfbLnkDZQAZre0e41gLlgNEU4BzBOs-nC_MIlCLTrVKjQyR59U6g3p_A/exec';
 
+// Pitanja i odgovori
 const QS = [
   { text:'Koliko sati dnevno provodiš na društvenim mrežama?', answers:['Manje od 1 sat','1–2 sata','2–4 sata','Više od 4 sata'] },
   { text:'Da li ti društvene mreže pomažu da ostaneš u kontaktu s prijateljima?', answers:['Da, veoma','Djelimično','Ne baš','Ne, radije komuniciram lično'] },
@@ -167,11 +169,15 @@ const QS = [
   { text:'Kako ocjenjuješ uticaj na mentalno zdravlje?', answers:['Pozitivno','Više pozitivno','Više negativno','Negativno'] },
   { text:'Da li bi ti bilo teško prestati koristiti društvene mreže?', answers:['Da, jako teško','Malo bi nedostajale','Ne bi bio problem'] },
 ];
+
+// Boje za grafikone
 const CLR = ['#6c8cff','#a78bfa','#34d399','#f59e0b','#f87171'];
 
+// Cuvanje odgovora korisnika
 let ans = {q1:null,q2:null,q3:null,q4:null,q5:null};
 let charts = [];
 
+// Biranje odgovora
 function sel(q, i) {
   ans['q'+q] = i;
   document.querySelectorAll('#q'+q+'opts .option').forEach((el,j) => el.classList.toggle('selected', j===i));
@@ -179,15 +185,22 @@ function sel(q, i) {
   if (nb) nb.disabled = false;
   if (q===5) document.getElementById('submitBtn').style.display = 'block';
 }
+
+// Prikaz pitanja po broju
 function showQ(n) {
   document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
   document.getElementById('q'+n+'card').classList.add('active');
   document.getElementById('progressFill').style.width = (n/5*100)+'%';
   document.getElementById('progressLabel').textContent = 'Pitanje '+n+' od 5';
 }
+
+// Idi na sljedeće pitanje
 function nxt(q) { if (ans['q'+q]!==null) showQ(q+1); }
+
+// Idi na prethodno pitanje
 function prv(q) { showQ(q-1); }
 
+// Slanje odgovora na Google Sheet
 function doSubmit() {
   for (let i=1;i<=5;i++) { if (ans['q'+i]===null) { alert('Molim te odgovori na sva pitanja.'); showQ(i); return; } }
   const btn = document.getElementById('submitBtn');
@@ -204,17 +217,16 @@ function doSubmit() {
         <h2>Hvala na učešću!</h2>
         <p>Tvoji odgovori su zabilježeni. Pogledaj rezultate ispod.</p>
       </div>`;
-    // Učitaj iz Sheeta nakon 2s (dovoljno da Sheet primi podatke)
     setTimeout(loadResults, 2000);
   });
 }
 
-// JSONP – jedini način da zaobiđemo CORS na Google Apps Script GET
+// Učitavanje rezultata iz Google Sheets (JSONP - zaobilazi CORS)
 function loadResults() {
   const old = document.getElementById('_jsonp');
   if (old) old.remove();
 
-  // Timeout – ako Script ne odgovori za 5s, prikaži 0
+  // Timeout ako server ne odgovori
   const timeout = setTimeout(() => {
     renderResults({q1:[0,0,0,0],q2:[0,0,0,0],q3:[0,0,0,0],q4:[0,0,0,0],q5:[0,0,0]});
   }, 5000);
@@ -234,6 +246,7 @@ function loadResults() {
   document.head.appendChild(s);
 }
 
+// Prikaz grafikona na osnovu podataka
 function renderResults(data) {
   const total = (data.q1||[]).reduce((a,b)=>a+b,0);
   document.getElementById('totalCount').innerHTML = 'Ukupno glasova: <span>'+total+'</span>';
@@ -281,7 +294,7 @@ function renderResults(data) {
   });
 }
 
-
+// Automatsko osvježavanje svakih 30 sekundi
 setInterval(loadResults, 30000);
 loadResults();
 </script>
